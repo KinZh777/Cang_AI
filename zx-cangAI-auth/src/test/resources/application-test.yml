@@ -1,0 +1,6 @@
+spring:
+  data:
+    redis:
+      host: 192.168.1.10
+      port: 6379 # Redis服务器连接端口
+      password: root  # Redis服务器连接密码（默认为空）

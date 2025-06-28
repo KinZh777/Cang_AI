@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.1.10:8848 #首次启动前务必修改成你自己的
+      config:
+        server-addr: 192.168.1.10:8848 #首次启动前务必修改成你自己的
+        file-extension: properties
+        name: ${spring.application.name}

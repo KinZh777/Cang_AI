@@ -1,0 +1,118 @@
+spring:
+  profiles:
+    active: prod
+  chain:
+    type: WEN_CHANG
+  application:
+    name: @application.name@
+  config:
+    import: classpath:datasource-sharding.yml,classpath:rpc.yml,classpath:cache.yml,classpath:job.yml,classpath:stream.yml,classpath:es.yml,classpath:seata.yml   #这里爆红可以直接忽略，没有任何影响
+  cloud:
+    # spring.cloud.stream.function.definition 已废弃, 需要使用 spring.cloud.function.definition 代替
+    function:
+      definition: chain;orderClose;heldCollection
+    stream:
+      rocketmq:
+        bindings:
+          chain-in-0:
+            consumer:
+              subscription:
+                expression: 'COLLECTION_MINT || COLLECTION_CHAIN' # 这里设置你希望订阅的Tag
+          orderClose-out-0:
+            producer:
+              producerType: Trans
+              transactionListener: orderCloseTransactionListener
+          heldCollection-in-0:
+            consumer:
+              subscription:
+                expression: 'ACTIVE' # 这里设置你希望订阅的Tag
+      bindings:
+        heldCollection-out-0:
+          content-type: application/json
+          destination: held-collection-result-topic
+          group: held-collection-group
+          binder: rocketmq
+        heldCollection-in-0:
+          content-type: application/json
+          destination: held-collection-result-topic
+          group: held-collection-group
+          binder: rocketmq
+        chain-out-0:
+          content-type: application/json
+          destination: chain-result-topic
+          group: chain-group
+          binder: rocketmq
+        chain-in-0:
+          content-type: application/json
+          destination: chain-result-topic
+          group: chain-group
+          binder: rocketmq
+        orderClose-out-0:
+          content-type: application/json
+          destination: order-close-topic
+          group: order-group
+          binder: rocketmq
+        orderClose-in-0:
+          content-type: application/json
+          destination: order-close-topic
+          group: order-group
+          binder: rocketmq
+  shardingsphere:
+    rules:
+      sharding:
+        tables:
+          trade_order:
+            actual-data-nodes: ds.trade_order_000${0..3}
+            keyGenerateStrategy:
+              column: id
+              keyGeneratorName: snowflake
+            table-strategy:
+              complex:
+                shardingColumns: buyer_id,order_id
+                shardingAlgorithmName: turbo-complex-sharding
+#              hint:
+#                shardingAlgorithmName: turbo-hint-sharding
+          trade_order_stream:
+            actual-data-nodes: ds.trade_order_stream_000${0..3}
+            keyGenerateStrategy:
+              column: id
+              keyGeneratorName: snowflake
+            table-strategy:
+              complex:
+                shardingColumns: buyer_id,order_id
+                shardingAlgorithmName: turbo-complex-sharding
+        shardingAlgorithms:
+          #          t-order-inline:
+          #            type: INLINE
+          #            props:
+          #              algorithm-expression: trade_order_0${Math.abs(buyer_id.hashCode()) % 4}
+          turbo-complex-sharding:
+            type: CLASS_BASED
+            props:
+              algorithmClassName: cn.zx.cang.ai.datasource.sharding.algorithm.TurboKeyShardingAlgorithm
+              strategy: complex
+              tableCount: 4
+              mainColum: buyer_id
+          turbo-hint-sharding:
+            type: CLASS_BASED
+            props:
+              algorithmClassName: cn.zx.cang.ai.datasource.sharding.algorithm.TurboHintShardingAlgorithm
+              strategy: hint
+        keyGenerators:
+          snowflake:
+            type: SNOWFLAKE
+        auditors:
+          sharding_key_required_auditor:
+            type: DML_SHARDING_CONDITIONS
+
+server:
+  port: 8085
+
+dubbo:
+  application:
+    qos-port: 33334
+
+
+seata:
+  use-jdk-proxy: true
+  enable-auto-data-source-proxy: false

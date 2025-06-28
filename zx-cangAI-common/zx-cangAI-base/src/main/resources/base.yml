@@ -1,0 +1,39 @@
+# 这是项目的需要改动的所有配置的地址的汇总，需要改哪个中间件的地址，在本文件中修改即可！
+nft:
+  turbo:
+    nacos: #已修改
+      server:
+        url: localhost:8848 # nft.turbo.nacos.server.url - Nacos 的地址+端口号 #首次启动前务必修改成你自己的
+    mysql: #已修改
+      url: jdbc:mysql://localhost:3306/NFTurbo?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true # nft.turbo.mysql.url - MySQL 的地址+数据库配置 #首次启动前务必修改成你自己的
+      username: root # nft.turbo.mysql.username - MySQL 的用户名 #首次启动前务必修改成你自己的
+      password: 'woshinidie' # nft.turbo.mysql.password - MySQL 的密码 #首次启动前务必修改成你自己的
+    redis: #已修改
+      url: localhost  # nft.turbo.redis.url - Redis 的地址 #首次启动前务必修改成你自己的
+      port: 6379  # nft.turbo.redis.port - Redis 的端口号 #首次启动前务必修改成你自己的
+      password: '' # nft.turbo.redis.password - Redis 的密码 #首次启动前务必修改成你自己的
+    elasticsearch: #已修改
+      enable: false # nft.turbo.elasticsearch.enable #如果你要使用es(没有启动一键mock)，这里需要改成true
+      url: 10.125.208.86:9200 # nft.turbo.elasticsearch.url - ElasticSearch 的地址+端口号 ##如果你要使用es(没有启动一键mock)，这里需要改成true
+      username: elastic # nft.turbo.elasticsearch.username - ElasticSearch 的用户名 ##如果你要使用es(没有启动一键mock)，这里需要改成true
+      password: 123456  # nft.turbo.elasticsearch.password - ElasticSearch 的密码 ##如果你要使用es(没有启动一键mock)，这里需要改成true
+    xxl-job: #已修改common
+      url: 139.129.32.11:8866  # nft.turbo.xxl-job.url - XXL-JOB 的地址 # 如果你要用他，这里需要改成你自己的
+      appName: xxl-job-executor  # nft.turbo.xxl-job.appName - 需要和你在xxl-job上创建的执行器名字保持一致，这里需要改成你自己的
+      accessToken: default_token # nft.turbo.xxl-job.accessToken - 需要和你在xxl-job上创建的token保持一致，这里需要改成你自己的
+    sentinel: # 已修改
+      url: localhost:8858 # nft.turbo.sentinel.url - Sentinel 的地址+端口号 # 如果用了sentinel 这里需要改成你自己的sentinel的控制台地址
+      port: 8858 # nft.turbo.sentinel.port - Sentinel 端口号 # 如果用了sentinel 这里需要改成你自己的sentinel的端口号
+      nacos:
+        data-id: nfturbo-gateway-sentinel # nft.turbo.sentinel.nacos.data-id - Sentinel配置保存的 nacos 的 data-id # 如果用了sentinel 这里需要改成你自己的 在nacos上定义的data-id
+    rocketmq: #已修改
+      url: 10.125.208.86:9876 # nft.turbo.rocketmq.url - RocketMQ 的地址+端口号 # 如果你要用RocketMQ，这里需要改成你自己的
+    dubbo:
+      nacos:
+        namespace: 1a55ac70-6cd9-4868-89d2-f58b88e3a210  # nft.turbo.dubbo.nacos.namespace - 自己到nacos上创建一个给dubbo用的namespce，然后和这里保持一致，首次启动前务必修改成你自己的 #首次启动前务必修改成你自己的
+        group: dubbo  # nft.turbo.dubbo.nacos.group - 自己到nacos上创建一个给dubbo用的 group，然后和这里保持一致，首次启动前务必修改成你自己的 #首次启动前务必修改成你自己的
+    seata: #已修改
+      nacos:
+        data-id: seataServer.properties # nft.turbo.seata.nacos.data-id - Seata 对应的Nacos 保存配置的 data-id #首次启动前务必修改成你自己的
+        group: seata # nft.turbo.seata.nacos.group - Seata 对应的Nacos 保存配置的 data-id #首次启动前务必修改成你自己的
+        namespace: 0d1185de-5ad0-4590-b7ca-cb8c4ab09b5a # nft.turbo.seata.nacos.namespace - Seata 对应的Nacos 保存配置的 namespace #首次启动前务必修改成你自己的

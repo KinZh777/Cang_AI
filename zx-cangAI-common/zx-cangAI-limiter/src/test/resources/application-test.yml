@@ -1,0 +1,4 @@
+
+redis:
+  serverAddress: "xxx" #如果你要运行单元测试，这里需要修改成自己的 redis 的地址： redis://192.168.0.1:6379
+  serverPassword: "xxx" #如果你要运行单元测试，这里需要修改成自己的 redis 的密码
