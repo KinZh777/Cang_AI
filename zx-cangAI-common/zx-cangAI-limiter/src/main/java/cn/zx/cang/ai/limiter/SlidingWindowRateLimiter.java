@@ -23,9 +23,10 @@ public class SlidingWindowRateLimiter implements RateLimiter {
     @Override
     public Boolean tryAcquire(String key, int limit, int windowSize) {
         RRateLimiter rRateLimiter = redissonClient.getRateLimiter(LIMIT_KEY_PREFIX + key);
-
+        //判断当前窗口是否存在
         if (!rRateLimiter.isExists()) {
-            rRateLimiter.trySetRate(RateType.OVERALL, limit, windowSize, RateIntervalUnit.SECONDS);
+            //如果不存在 针对不同的手机号(PER_CLIENT)设置限流窗口
+            rRateLimiter.trySetRate(RateType.PER_CLIENT, limit, windowSize, RateIntervalUnit.SECONDS);
         }
 
         return rRateLimiter.tryAcquire();

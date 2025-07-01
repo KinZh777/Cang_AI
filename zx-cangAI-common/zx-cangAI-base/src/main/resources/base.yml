@@ -11,7 +11,7 @@ nft:
     redis: #已修改
       url: localhost  # nft.turbo.redis.url - Redis 的地址 #首次启动前务必修改成你自己的
       port: 6379  # nft.turbo.redis.port - Redis 的端口号 #首次启动前务必修改成你自己的
-      password: '' # nft.turbo.redis.password - Redis 的密码 #首次启动前务必修改成你自己的
+#      password: '' # nft.turbo.redis.password - Redis 的密码 #首次启动前务必修改成你自己的
     elasticsearch: #已修改
       enable: false # nft.turbo.elasticsearch.enable #如果你要使用es(没有启动一键mock)，这里需要改成true
       url: 10.125.208.86:9200 # nft.turbo.elasticsearch.url - ElasticSearch 的地址+端口号 ##如果你要使用es(没有启动一键mock)，这里需要改成true

@@ -2,7 +2,7 @@ spring:
   application:
     name: @application.name@
   config:
-    import: classpath:datasource.yml,classpath:cache.yml,classpath:rpc.yml
+    import: classpath:base.yml,classpath:datasource.yml,classpath:cache.yml,classpath:rpc.yml
 
 server:
   port: 8083

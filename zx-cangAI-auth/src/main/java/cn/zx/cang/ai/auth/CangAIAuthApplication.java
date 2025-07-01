@@ -9,10 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication(scanBasePackages = {"cn.zx.cang.ai.auth"})
 @EnableDubbo
-public class NfTurboAuthApplication {
+public class CangAIAuthApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(NfTurboAuthApplication.class, args);
+        SpringApplication.run(CangAIAuthApplication.class, args);
     }
 
 }

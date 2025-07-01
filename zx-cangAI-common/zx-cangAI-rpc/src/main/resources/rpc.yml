@@ -4,13 +4,13 @@ dubbo:
     check: false
   protocol:
     name: dubbo
-    port: -1
+    port: -1  #自分配端口
   registry:
-    address: nacos://192.168.1.10:8848 #首次启动前务必修改成你自己的
+    address: nacos://${nft.turbo.nacos.server.url} #首次启动前务必修改成你自己的
     parameters:
-      namespace: 01c84dcc-98aa-42d9-885d-24ca4b53e1f5  # 自己到nacos上创建一个给dubbo用的namespce，然后和这里保持一致，首次启动前务必修改成你自己的
-      group: dubbo #首次启动前务必修改成你自己的
+      namespace: ${nft.turbo.dubbo.nacos.namespace}  # 自己到nacos上创建一个给dubbo用的namespce，然后和这里保持一致，首次启动前务必修改成你自己的
+      group: ${nft.turbo.dubbo.nacos.group} #首次启动前务必修改成你自己的
   application:
     name: ${spring.application.name}
-    qos-enable: true
-    qos-accept-foreign-ip: false
+    qos-enable: true              # 允许通过QoS访问dubbo服务
+    qos-accept-foreign-ip: false # 只允许本机通过QoS访问dubbo服务

@@ -2,4 +2,4 @@ spring:
   application:
     name: @application.name@
   config:
-    import: classpath:config.yml
+    import: classpath:base.yml,classpath:config.yml

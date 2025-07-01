@@ -7,8 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 2025/1/20 16:09
  */
 @SpringBootApplication(scanBasePackages = "cn.zx.cang.ai.gateway")
-public class NfTurboGatewayApplication {
+public class CangAIGatewayApplication {
     public static void main(String[] args) {
-        SpringApplication.run(NfTurboGatewayApplication.class, args);
+        SpringApplication.run(CangAIGatewayApplication.class, args);
     }
 }

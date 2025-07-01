@@ -79,31 +79,39 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
     }
 
     @DistributeLock(keyExpression = "#telephone", scene = "USER_REGISTER")
+    @Transactional(rollbackFor = Exception.class)
     public UserOperatorResponse register(String telephone, String inviteCode) {
+        // 默认昵称
         String defaultNickName;
+        // 自己的邀请码
         String randomString;
-        //生成邀请码
-        //生成默认昵称
+        //生成邀请码、默认昵称
         do {
             randomString = RandomUtil.randomString(6).toUpperCase();
+            //前缀 + 6位随机数 + 手机号后四位
             defaultNickName = DEFAULT_NICK_NAME_PREFIX + randomString + telephone.substring(7, 11);
         } while (nickNameExist(defaultNickName) && inviteCodeExist(inviteCode));
 
+        //判断是否有邀请码
         String inviterId = null;
         if (StringUtils.isNotBlank(inviteCode)) {
             User inviter = userMapper.findByInviteCode(inviteCode);
             if (inviter != null) {
+                //根据邀请码查询邀请人id
                 inviterId = inviter.getId().toString();
             }
         }
         //注册
         User user = register(telephone, defaultNickName, telephone, randomString, inviterId);
         Assert.notNull(user, UserErrorCode.USER_OPERATE_FAILED.getCode());
-        //更新邀请排名
-        //更新用户缓存
+
+        //将新生成的昵称和邀请码加入布隆过滤器
         addNickName(defaultNickName);
         addInviteCode(inviteCode);
+
+        //更新排行榜
         updateInviteRank(inviterId);
+        //更新当前用户信息
         updateUserCache(user.getId().toString(), user);
         //加入流水
         long streamResult = userOperateStreamService.insertStream(user, UserOperateTypeEnum.REGISTER);

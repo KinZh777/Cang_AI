@@ -7,7 +7,7 @@
     <conversionRule conversionWord="sensitive" converterClass="com.github.houbb.sensitive.logback.converter.SensitiveLogbackConverter" />
 
     <property name="APP_NAME" value="${app.name}"/>
-    <property name="LOG_PATH" value="${user.home}/${APP_NAME}/logs"/>
+    <property name="LOG_PATH" value="${user.home}/cangAI_log/${APP_NAME}/logs"/>
     <property name="LOG_FILE" value="${LOG_PATH}/application.log"/>
     <property name="FILE_LOG_PATTERN" value="%d %-5level [%thread %logger - %sensitive%n"/>
 

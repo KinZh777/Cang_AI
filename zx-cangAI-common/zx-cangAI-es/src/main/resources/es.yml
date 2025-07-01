@@ -1,11 +1,11 @@
 spring:
   elasticsearch:
-    enable: false #如果你要使用es，这里需要改成true
-    uris: http://192.168.1.10:9200 #如果你没有启动一键mock，这里需要改成你自己的
-    username: elastic #如果你没有启动一键mock，这里需要改成你自己的
-    password: 123456 #如果你没有启动一键mock，这里需要改成你自己的
+    enable: ${nft.turbo.elasticsearch.enable}
+    uris: http://${nft.turbo.elasticsearch.url}
+    username: ${nft.turbo.elasticsearch.username}
+    password: ${nft.turbo.elasticsearch.password}
 easy-es:
-  enable: false #如果你要使用es，这里需要改成true
-  address : 192.168.1.10:9200 #如果你没有启动一键mock，这里需要改成你自己的
-  username: elastic #如果你没有启动一键mock，这里需要改成你自己的
-  password: 123456 #如果你没有启动一键mock，这里需要改成你自己的
+  enable: ${nft.turbo.elasticsearch.enable}
+  address : ${nft.turbo.elasticsearch.url}
+  username: ${nft.turbo.elasticsearch.username}
+  password: ${nft.turbo.elasticsearch.password}

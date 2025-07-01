@@ -1,9 +1,9 @@
 spring:
   data:
     redis:
-      host: 192.168.1.10 #首次启动前务必修改成你自己的
-      port: 6379 # Redis服务器连接端口 #首次启动前务必修改成你自己的
-      password: root # Redis服务器连接密码（默认为空） #首次启动前务必修改成你自己的
+      host: ${nft.turbo.redis.url}
+      port: ${nft.turbo.redis.port}
+      password: ${nft.turbo.redis.password}
       ssl:
         enabled: true
   redis:
@@ -15,10 +15,10 @@ spring:
           timeout: 3000
           retryAttempts: 3
           retryInterval: 1500
-          password: root  #首次启动前务必修改成你自己的
+          #password: root  #首次启动前务必修改成你自己的
           subscriptionsPerConnection: 5
           clientName: null
-          address: "redis://192.168.1.10:6379"   #首次启动前务必修改成你自己的
+          address: "redis://${nft.turbo.redis.url}:${nft.turbo.redis.port}"   #首次启动前务必修改成你自己的
           subscriptionConnectionMinimumIdleSize: 1
           subscriptionConnectionPoolSize: 50
           connectionMinimumIdleSize: 24

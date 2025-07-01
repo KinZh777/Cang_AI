@@ -2,6 +2,7 @@ package cn.zx.cang.ai.notice.facade;
 
 import cn.zx.cang.ai.api.notice.response.NoticeResponse;
 import cn.zx.cang.ai.api.notice.service.NoticeFacadeService;
+import cn.zx.cang.ai.base.exception.SystemException;
 import cn.zx.cang.ai.limiter.SlidingWindowRateLimiter;
 import cn.zx.cang.ai.notice.domain.constant.NoticeState;
 import cn.zx.cang.ai.notice.domain.entity.Notice;
@@ -14,8 +15,13 @@ import com.alibaba.fastjson.JSON;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+import static cn.zx.cang.ai.api.notice.constant.NoticeConstant.CAPTCHA_KEY_PREFIX;
+import static cn.zx.cang.ai.base.exception.BizErrorCode.SEND_NOTICE_DUPLICATED;
 
 /**
  * @author kinchou
@@ -44,15 +50,16 @@ public class NoticeFacadeServiceImpl implements NoticeFacadeService {
     @Facade
     @Override
     public NoticeResponse generateAndSendSmsCaptcha(String telephone) {
-
-        // 限流-滑动窗口
-
+        // 限流-滑动窗口 限制60秒内通过一次
+        if(!slidingWindowRateLimiter.tryAcquire(telephone,60, 1)){
+            // 如果已经发送过了 抛出提示
+            throw new SystemException(SEND_NOTICE_DUPLICATED);
+        }
         // 生成验证码
         String captcha = RandomUtil.randomNumbers(4);
-
         // 验证码存入Redis
-
-        // 保存验证码
+        redisTemplate.opsForValue().set(CAPTCHA_KEY_PREFIX+telephone, captcha, 1, TimeUnit.MINUTES);
+        // 保存验证码进数据库
         Notice notice = noticeService.saveCaptcha(telephone, captcha);
 
         // 发送短信

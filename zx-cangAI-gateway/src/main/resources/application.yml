@@ -2,7 +2,7 @@ spring:
   application:
     name: @application.name@
   config:
-    import: classpath:cache.yml,classpath:config.yml,classpath:limiter.yml
+    import: classpath:base.yml,classpath:config.yml,classpath:cache.yml,classpath:limiter.yml,classpath:rpc.yml
   cloud:
     gateway:
       default-filters:
@@ -14,12 +14,12 @@ spring:
             allowedMethods: '*'
             allowedOrigins: '*'
       routes:
-        - id: nfturbo-auth
-          uri: lb://nfturbo-auth
+        - id: cangAI-auth
+          uri: lb://cangAI-auth
           predicates:
             - Path=/auth/**,/token/**
-        - id: nfturbo-business
-          uri: lb://nfturbo-business
+        - id: cangAI-business
+          uri: lb://cangAI-business
           predicates:
             - Path=/trade/**,/order/**,/user/**,/collection/**,/wxPay/**
 server:
