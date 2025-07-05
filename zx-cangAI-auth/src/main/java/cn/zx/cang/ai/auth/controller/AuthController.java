@@ -109,7 +109,7 @@ public class AuthController {
             userRegisterRequest.setTelephone(loginParam.getTelephone());
             UserOperatorResponse userOperatorResponse = userFacadeService.register(userRegisterRequest);
             if(userOperatorResponse.getSuccess()){
-                //注册成功，冲洗查一把数据库获取用户信息
+                //注册成功，重新查一把数据库获取用户信息
                 userQueryResponse = userFacadeService.query(userQueryRequest);
                 userInfo = userQueryResponse.getData();
             }else return Result.error(userOperatorResponse.getResponseCode(), userOperatorResponse.getResponseMessage());
