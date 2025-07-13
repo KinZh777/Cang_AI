@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Configuration;
  * @author kinchou
  */
 @Configuration
-@EnableMethodCache(basePackages = "cn.zx.nft.turbo")
+@EnableMethodCache(basePackages = "cn.zx.cang.ai")
 public class CacheConfiguration {
 }

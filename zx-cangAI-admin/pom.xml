@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>cn.zx</groupId>
-    <artifactId>nft-turbo-admin</artifactId>
+    <artifactId>zx-cangAI-admin</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>

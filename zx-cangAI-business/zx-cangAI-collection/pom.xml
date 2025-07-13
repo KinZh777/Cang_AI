@@ -13,11 +13,39 @@
     <groupId>cn.zx</groupId>
     <artifactId>zx-cangAI-collection</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <description>藏品模块</description>
 
     <properties>
+        <application.name>CangAI-collection</application.name>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.zx</groupId>
+            <artifactId>zx-cangAI-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.zx</groupId>
+            <artifactId>zx-cangAI-bot</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.zx</groupId>
+            <artifactId>zx-cangAI-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.zx</groupId>
+            <artifactId>zx-cangAI-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.zx</groupId>
+            <artifactId>zx-cangAI-datasource</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

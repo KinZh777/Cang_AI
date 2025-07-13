@@ -24,14 +24,14 @@
 
     <modules>
         <module>zx-cangAI-notice</module>
-        <module>zx-cangAI-chain</module>
+<!--        <module>zx-cangAI-chain</module>-->
         <module>zx-cangAI-collection</module>
-        <module>zx-cangAI-pay</module>
+<!--        <module>zx-cangAI-pay</module>-->
         <module>zx-cangAI-app</module>
-        <module>zx-cangAI-order</module>
+<!--        <module>zx-cangAI-order</module>-->
         <module>zx-cangAI-user</module>
-        <module>zx-cangAI-trade</module>
-        <module>zx-cangAI-goods</module>
+<!--        <module>zx-cangAI-trade</module>-->
+<!--        <module>zx-cangAI-goods</module>-->
     </modules>
 
 </project>

@@ -16,7 +16,7 @@
     <description>用户模块</description>
 
     <properties>
-        <application.name>nfturbo-user</application.name>
+        <application.name>CangAI-user</application.name>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

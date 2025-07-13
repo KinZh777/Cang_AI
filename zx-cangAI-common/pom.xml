@@ -38,6 +38,7 @@
         <module>zx-cangAI-mq</module>
         <module>zx-cangAI-es</module>
         <module>zx-cangAI-seata</module>
+        <module>zx-cangAI-bot</module>
     </modules>
 
 

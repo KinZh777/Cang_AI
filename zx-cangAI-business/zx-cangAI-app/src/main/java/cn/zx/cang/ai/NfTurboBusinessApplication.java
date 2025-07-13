@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @author kinchou
  */
-@SpringBootApplication(scanBasePackages = "cn.zx.nft.turbo")
+@SpringBootApplication(scanBasePackages = "cn.zx.cang.ai")
 public class NfTurboBusinessApplication {
 
     public static void main(String[] args) {

@@ -30,10 +30,10 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>cn.zx</groupId>
-            <artifactId>zx-cangAI-order</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>cn.zx</groupId>-->
+<!--            <artifactId>zx-cangAI-order</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>cn.zx</groupId>
