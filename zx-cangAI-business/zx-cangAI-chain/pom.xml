@@ -15,9 +15,39 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
+        <application.name>cangAI-chain</application.name>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.zx</groupId>
+            <artifactId>zx-cangAI-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.zx</groupId>
+            <artifactId>zx-cangAI-base</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.zx</groupId>
+            <artifactId>zx-cangAI-rpc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.zx</groupId>
+            <artifactId>zx-cangAI-limiter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.zx</groupId>
+            <artifactId>zx-cangAI-datasource</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.zx</groupId>
+            <artifactId>zx-cangAI-mq</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

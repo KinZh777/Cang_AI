@@ -1,0 +1,12 @@
+cang:
+  ai:
+    chain:
+      type: MOCK
+
+spring:
+  profiles:
+    active: dev
+  config:
+    import: classpath:base.yml,classpath:datasource.yml,classpath:rpc.yml,classpath:cache.yml,classpath:stream.yml
+  application:
+    name: @application.name@

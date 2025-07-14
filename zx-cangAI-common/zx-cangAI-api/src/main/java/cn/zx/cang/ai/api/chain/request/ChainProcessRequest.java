@@ -1,11 +1,8 @@
 package cn.zx.cang.ai.api.chain.request;
 
 import cn.zx.cang.ai.base.request.BaseRequest;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 /**
  * 链处理参数
@@ -20,6 +17,11 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ChainProcessRequest extends BaseRequest {
 
+    /**
+     *
+     * 链类型
+     */
+    private String chainType;
     /**
      * 幂等号
      */
@@ -63,11 +65,13 @@ public class ChainProcessRequest extends BaseRequest {
     /**
      * 业务id
      */
+    @NotNull
     private String bizId;
 
     /**
      * 业务类型
      */
+    @NotNull(message = "业务类型不能为空")
     private String bizType;
 
 

@@ -23,6 +23,11 @@ public enum ChainOperateBizTypeEnum {
     /**
      * 链操作
      */
-     CHAIN_OPERATION;
+     CHAIN_OPERATION,
+
+    /**
+     * 盲盒
+     */
+    BLIND_BOX;
 
 }

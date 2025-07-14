@@ -7,16 +7,20 @@ import cn.zx.cang.ai.api.user.request.UserActiveRequest;
 import cn.zx.cang.ai.api.user.request.UserAuthRequest;
 import cn.zx.cang.ai.api.user.request.UserModifyRequest;
 import cn.zx.cang.ai.api.user.response.UserOperatorResponse;
+import cn.zx.cang.ai.api.user.response.data.UserInfo;
 import cn.zx.cang.ai.base.exception.BizException;
 import cn.zx.cang.ai.base.exception.RepoErrorCode;
 import cn.zx.cang.ai.base.response.PageResponse;
 import cn.zx.cang.ai.lock.DistributeLock;
 import cn.zx.cang.ai.user.domain.entity.User;
+import cn.zx.cang.ai.user.domain.entity.UserOperateStream;
+import cn.zx.cang.ai.user.domain.entity.convertor.UserConvertor;
 import cn.zx.cang.ai.user.infrastructure.exception.UserErrorCode;
 import cn.zx.cang.ai.user.infrastructure.exception.UserException;
 import cn.zx.cang.ai.user.infrastructure.mapper.UserMapper;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.RandomUtil;
+import cn.zx.cang.ai.user.infrastructure.mapper.UserOperateStreamMapper;
 import com.alicp.jetcache.Cache;
 import com.alicp.jetcache.CacheManager;
 import com.alicp.jetcache.anno.CacheInvalidate;
@@ -59,6 +63,9 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
     private UserOperateStreamService userOperateStreamService;
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private RedissonClient redissonClient;
 
     private RBloomFilter<String> nickNameBloomFilter;
@@ -71,6 +78,9 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
     private CacheManager cacheManager;
 
     private Cache<String, User> idUserCache;
+
+    @Autowired
+    private UserOperateStreamMapper userOperateStreamMapper;
 
     @PostConstruct
     public void init() {
@@ -263,9 +273,38 @@ public class UserService extends ServiceImpl<UserMapper, User> implements Initia
      * @return
      */
     @CacheInvalidate(name = ":user:cache:id:", key = "#userAuthRequest.userId")
+    @Transactional(rollbackFor = Exception.class)
     public UserOperatorResponse auth(UserAuthRequest userAuthRequest) {
-
-        return null;
+        // 1. 判断用户是否存在
+        UserOperatorResponse userOperatorResponse = new UserOperatorResponse();
+        User user = userMapper.selectById(userAuthRequest.getUserId());
+        Assert.notNull(user, () -> new UserException(USER_NOT_EXIST));
+        // 2. 判断用户是否已实名认证
+        if(user.getState()==UserStateEnum.AUTH || user.getState() == UserStateEnum.ACTIVE){
+            userOperatorResponse.setSuccess(Boolean.TRUE);
+            userOperatorResponse.setUser(UserConvertor.INSTANCE.mapToVo(user));
+            return userOperatorResponse;
+        }
+        Assert.isTrue(user.getState()==UserStateEnum.INIT, () -> new UserException(USER_STATUS_IS_NOT_INIT));
+        // 3.1 进行实名认证
+        boolean authResult = authService.checkAuth(userAuthRequest.getRealName(), userAuthRequest.getIdCard());
+        Assert.isTrue(authResult, () -> new UserException(USER_AUTH_FAIL));
+        // 3.2 用户状态更新
+        user.auth(userAuthRequest.getRealName(),userAuthRequest.getIdCard());
+        boolean result = updateById(user);
+        if(!result){
+            userOperatorResponse.setSuccess(false);
+            userOperatorResponse.setResponseCode(UserErrorCode.USER_OPERATE_FAILED.getCode());
+            userOperatorResponse.setResponseMessage(UserErrorCode.USER_OPERATE_FAILED.getMessage());
+            return userOperatorResponse;
+        }
+        // 3.3 用户操作流水记录
+        UserOperateStream userOperateStream = new UserOperateStream();
+        Long streamResult = userOperateStreamService.insertStream(user, UserOperateTypeEnum.AUTH);
+        Assert.notNull(streamResult, () -> new BizException(RepoErrorCode.UPDATE_FAILED));
+        userOperatorResponse.setSuccess(true);
+        userOperatorResponse.setUser(UserConvertor.INSTANCE.mapToVo(user));
+        return userOperatorResponse;
     }
 
     /**

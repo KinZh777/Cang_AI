@@ -26,7 +26,9 @@ public class TokenController {
     public Result<String> get(@NotBlank String scene) {
         if (StpUtil.isLogin()) {
             //生成token
+            String userId = StpUtil.getLoginIdAsString();
             //token保存到缓存中
+
             //返回token
             return Result.success(UUID.randomUUID().toString());
         }

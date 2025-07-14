@@ -2,7 +2,13 @@ package cn.zx.cang.ai.user.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import cn.zx.cang.ai.api.chain.request.ChainProcessRequest;
+import cn.zx.cang.ai.api.chain.response.ChainProcessResponse;
+import cn.zx.cang.ai.api.chain.response.data.ChainCreateData;
+import cn.zx.cang.ai.api.chain.service.ChainFacadeService;
+import cn.zx.cang.ai.api.user.request.UserAuthRequest;
 import cn.zx.cang.ai.api.user.request.UserModifyRequest;
+import cn.zx.cang.ai.api.user.response.UserOperatorResponse;
 import cn.zx.cang.ai.api.user.response.data.UserInfo;
 import cn.zx.cang.ai.file.FileService;
 import cn.zx.cang.ai.user.domain.entity.User;
@@ -38,11 +44,16 @@ import static cn.zx.cang.ai.user.infrastructure.exception.UserErrorCode.USER_UPL
 @RequestMapping("user")
 public class UserController {
 
+    private final static String APP_NAME_USER = "CANGAI_USER";
+
     @Autowired
     private UserService userService;
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private ChainFacadeService chainFacadeService;
 
     @GetMapping("/getUserInfo")
     public Result<UserInfo> getUserInfo() {
@@ -117,7 +128,24 @@ public class UserController {
 
     @PostMapping("/auth")
     public Result<Boolean> auth(@Valid @RequestBody UserAuthParam userAuthParam){
+        Long userId = StpUtil.getLoginIdAsLong();
         //TODO 用户实名认证
+        // 1. 进行实名认证 - > 实名认证成功推进用户状态为AUTH
+        UserAuthRequest userAuthRequest = new UserAuthRequest();
+        userAuthRequest.setUserId(userId);
+        userAuthRequest.setIdCard(userAuthParam.getIdCard());
+        userAuthRequest.setRealName(userAuthParam.getRealName());
+        UserOperatorResponse authResponse = userService.auth(userAuthRequest);
+        if(!authResponse.getSuccess()){
+            return Result.error(authResponse.getResponseCode(),authResponse.getResponseMessage());
+        }
+        // 2. 用户上链 - > 链服务 - > 上链成功推进用户状态为ACTIVE
+        ChainProcessRequest chainProcessRequest = new ChainProcessRequest();
+        chainProcessRequest.setUserId(String.valueOf(userId));
+        String identifier = APP_NAME_USER + "_" + authResponse.getUser().getUserRole().name()+"_"+ authResponse.getUser().getUserId();
+        chainProcessRequest.setIdentifier(identifier);
+        ChainProcessResponse<ChainCreateData> createAddrResult = chainFacadeService.createAddr(chainProcessRequest);
+
         return Result.success(Boolean.TRUE);
     }
 }
