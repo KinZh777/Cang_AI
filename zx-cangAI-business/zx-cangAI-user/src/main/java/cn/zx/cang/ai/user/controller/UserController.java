@@ -6,6 +6,7 @@ import cn.zx.cang.ai.api.chain.request.ChainProcessRequest;
 import cn.zx.cang.ai.api.chain.response.ChainProcessResponse;
 import cn.zx.cang.ai.api.chain.response.data.ChainCreateData;
 import cn.zx.cang.ai.api.chain.service.ChainFacadeService;
+import cn.zx.cang.ai.api.user.request.UserActiveRequest;
 import cn.zx.cang.ai.api.user.request.UserAuthRequest;
 import cn.zx.cang.ai.api.user.request.UserModifyRequest;
 import cn.zx.cang.ai.api.user.response.UserOperatorResponse;
@@ -30,8 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.util.UUID;
 
-import static cn.zx.cang.ai.user.infrastructure.exception.UserErrorCode.USER_NOT_EXIST;
-import static cn.zx.cang.ai.user.infrastructure.exception.UserErrorCode.USER_UPLOAD_PICTURE_FAIL;
+import static cn.zx.cang.ai.user.infrastructure.exception.UserErrorCode.*;
 
 /**
  * 用户信息
@@ -145,7 +145,27 @@ public class UserController {
         String identifier = APP_NAME_USER + "_" + authResponse.getUser().getUserRole().name()+"_"+ authResponse.getUser().getUserId();
         chainProcessRequest.setIdentifier(identifier);
         ChainProcessResponse<ChainCreateData> createAddrResult = chainFacadeService.createAddr(chainProcessRequest);
-
-        return Result.success(Boolean.TRUE);
+        if (createAddrResult.getSuccess()) {
+            //激活账户
+            ChainCreateData chainCreateData = createAddrResult.getData();
+            UserActiveRequest userActiveRequest = new UserActiveRequest();
+            userActiveRequest.setUserId(Long.valueOf(userId));
+            userActiveRequest.setBlockChainUrl(chainCreateData.getAccount());
+            userActiveRequest.setBlockChainPlatform(chainCreateData.getPlatform());
+            UserOperatorResponse activeResponse = userService.active(userActiveRequest);
+            if (activeResponse.getSuccess()) {
+                refreshUserInSession(String.valueOf(userId));
+                return Result.success(true);
+            }else {
+                return Result.error(activeResponse.getResponseCode(), activeResponse.getResponseMessage());
+            }
+        }else {
+            throw new UserException(USER_CREATE_CHAIN_FAIL);
+        }
+    }
+    private void refreshUserInSession(String userId) {
+        User user = userService.getById(userId);
+        UserInfo userInfo = UserConvertor.INSTANCE.mapToVo(user);
+        StpUtil.getSession().set(userInfo.getUserId().toString(), userInfo);
     }
 }
