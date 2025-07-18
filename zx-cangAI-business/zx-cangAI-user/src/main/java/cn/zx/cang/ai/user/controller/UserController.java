@@ -135,6 +135,7 @@ public class UserController {
         userAuthRequest.setUserId(userId);
         userAuthRequest.setIdCard(userAuthParam.getIdCard());
         userAuthRequest.setRealName(userAuthParam.getRealName());
+        //在这里完成实名认证
         UserOperatorResponse authResponse = userService.auth(userAuthRequest);
         if(!authResponse.getSuccess()){
             return Result.error(authResponse.getResponseCode(),authResponse.getResponseMessage());
@@ -163,6 +164,7 @@ public class UserController {
             throw new UserException(USER_CREATE_CHAIN_FAIL);
         }
     }
+
     private void refreshUserInSession(String userId) {
         User user = userService.getById(userId);
         UserInfo userInfo = UserConvertor.INSTANCE.mapToVo(user);

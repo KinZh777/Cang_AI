@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>cn.zx</groupId>
-        <artifactId>zx-cangAI-business</artifactId>
+        <artifactId>zx-cangAI-goods</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 

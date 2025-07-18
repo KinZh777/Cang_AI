@@ -1,5 +1,9 @@
 package cn.zx.cang.ai.api.goods.model;
 
+import cn.zx.cang.ai.api.collection.constant.CollectionVoState;
+import cn.zx.cang.ai.api.goods.constant.GoodsState;
+import cn.zx.cang.ai.api.goods.constant.GoodsType;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -7,6 +11,16 @@ import java.math.BigDecimal;
  * @author kinchou
  */
 public abstract class BaseGoodsVO implements Serializable {
+    private GoodsState state;
+
+    public GoodsState getState() {
+        return state;
+    }
+
+    public void setState(GoodsState state) {
+        this.state = state;
+    }
+
     /**
      * 商品名称
      *
@@ -40,8 +54,9 @@ public abstract class BaseGoodsVO implements Serializable {
      *
      * @return
      */
-    public abstract Boolean available();
-
+    public Boolean available() {
+        return this.state == GoodsState.SELLING;
+    }
     /**
      * 价格
      *

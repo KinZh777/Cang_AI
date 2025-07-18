@@ -2,6 +2,7 @@ package cn.zx.cang.ai.api.collection.model;
 
 import cn.zx.cang.ai.api.collection.constant.CollectionStateEnum;
 import cn.zx.cang.ai.api.collection.constant.CollectionVoState;
+import cn.zx.cang.ai.api.goods.constant.GoodsState;
 import cn.zx.cang.ai.api.goods.model.BaseGoodsVO;
 import lombok.Getter;
 import lombok.Setter;
@@ -57,11 +58,6 @@ public class CollectionVO extends BaseGoodsVO {
     private Long inventory;
 
     /**
-     * '状态'
-     */
-    private CollectionVoState state;
-
-    /**
      * '藏品创建时间'
      */
     private Date createTime;
@@ -83,27 +79,29 @@ public class CollectionVO extends BaseGoodsVO {
 
     public static final int DEFAULT_MIN_SALE_TIME = 60;
 
-    public void setState(CollectionStateEnum state, Date saleTime, Long saleableInventory) {
+    public static GoodsState getState(CollectionStateEnum state, Date saleTime, Long saleableInventory) {
         if (state.equals(CollectionStateEnum.INIT) || state.equals(CollectionStateEnum.REMOVED)) {
-            this.setState(CollectionVoState.NOT_FOR_SALE);
+            return GoodsState.NOT_FOR_SALE;
         }
 
         Instant now = Instant.now();
 
         if (now.compareTo(saleTime.toInstant()) >= 0) {
             if (saleableInventory > 0) {
-                this.setState(CollectionVoState.SELLING);
+                return GoodsState.SELLING;
             } else {
-                this.setState(CollectionVoState.SOLD_OUT);
+                return GoodsState.SOLD_OUT;
             }
         } else {
             if (ChronoUnit.MINUTES.between(now, saleTime.toInstant()) > DEFAULT_MIN_SALE_TIME) {
-                this.setState(CollectionVoState.WAIT_FOR_SALE);
+                return GoodsState.WAIT_FOR_SALE;
             } else {
-                this.setState(CollectionVoState.COMING_SOON);
+                return GoodsState.COMING_SOON;
             }
         }
     }
+
+    public void setState(CollectionStateEnum state, Date saleTime, Long saleableInventory) {}
 
     @Override
     public String getGoodsName() {
@@ -124,11 +122,6 @@ public class CollectionVO extends BaseGoodsVO {
     @Override
     public Integer getVersion() {
         return version;
-    }
-
-    @Override
-    public Boolean available() {
-        return this.state == CollectionVoState.SELLING;
     }
 
     @Override

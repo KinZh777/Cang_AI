@@ -88,7 +88,7 @@ public class CozeServiceImpl implements BotService {
 
 
     @Override
-    public String getConversationId(String botId){
+    public String createConversationId(String botId){
         CreateConversationResp resp = cozeAPI.conversations().create(new CreateConversationReq(null, null, botId));
         return resp.getConversation().getId();
     }

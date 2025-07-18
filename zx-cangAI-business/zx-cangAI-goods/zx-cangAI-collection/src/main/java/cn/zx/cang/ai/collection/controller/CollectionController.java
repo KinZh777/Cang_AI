@@ -1,6 +1,9 @@
 package cn.zx.cang.ai.collection.controller;
 
 import cn.hutool.core.lang.Assert;
+import cn.zx.cang.ai.api.collection.model.CollectionVO;
+import cn.zx.cang.ai.api.collection.model.HeldCollectionVO;
+import cn.zx.cang.ai.base.response.SingleResponse;
 import cn.zx.cang.ai.bot.token.BotToken;
 import cn.zx.cang.ai.collection.domain.vo.CollectionVo;
 import cn.zx.cang.ai.api.collection.response.CollectionChatResponse;
@@ -10,10 +13,13 @@ import cn.zx.cang.ai.collection.domain.entity.Collection;
 import cn.zx.cang.ai.collection.domain.service.CollectionService;
 import cn.zx.cang.ai.collection.infrastructure.CollectionMapper;
 import cn.zx.cang.ai.collection.param.CollectionChatParam;
+import cn.zx.cang.ai.collection.param.TransferParam;
+import cn.zx.cang.ai.web.vo.MultiResult;
 import cn.zx.cang.ai.web.vo.Result;
 import com.coze.openapi.client.auth.OAuthToken;
 import com.coze.openapi.client.connversations.CreateConversationReq;
 import com.coze.openapi.client.connversations.CreateConversationResp;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +50,42 @@ public class CollectionController {
     @Autowired
     private CollectionMapper collectionMapper;
 
+    //TODO 获取藏品列表
+    @PostMapping("/collectionList")
+    public MultiResult<CollectionVO> collectionList(){
+        return null;
+    }
+
+    //TODO 获取藏品信息
+    @GetMapping("/collectionInfo")
+    public Result<CollectionVO> collectionInfo(@NotBlank String collectionId) {
+        return null;
+    }
+
+    //TODO 获取用户持有的藏品列表
+    @GetMapping("/heldCollectionList")
+    public MultiResult<HeldCollectionVO> heldCollectionList(String keyword, String state, int pageSize, int currentPage) {
+        return null;
+    }
+
+    //TODO 获取用户持有的藏品信息
+    @GetMapping("/heldCollectionInfo")
+    public Result<HeldCollectionVO> heldCollectionInfo(@NotBlank String heldCollectionId) {
+        //SingleResponse<HeldCollectionVO> singleResponse = collectionReadFacadeService.queryHeldCollectionById(Long.valueOf(heldCollectionId));
+        //return Result.success(singleResponse.getData());
+        return null;
+    }
+
+    @PostMapping("/destroy")
+    public Result<Boolean> destroy(@NotBlank(message = "collectionId 不能为空") String heldCollectionId) {
+
+        return null;
+    }
+
+    @PostMapping("/transfer")
+    public Result<Boolean> transfer(@Valid @RequestBody TransferParam param) {
+        return null;
+    }
 
     @PostMapping(value = "/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @BotToken
@@ -94,7 +136,7 @@ public class CollectionController {
             conversationId = conversationBucket.get();
         } else {
             //反之创建新会话
-            conversationId = botService.getConversationId(collection.getBotId());
+            conversationId = botService.createConversationId(collection.getBotId());
             conversationBucket.set(conversationId);
             conversationBucket.expire(Instant.now().plusSeconds(60));
         }

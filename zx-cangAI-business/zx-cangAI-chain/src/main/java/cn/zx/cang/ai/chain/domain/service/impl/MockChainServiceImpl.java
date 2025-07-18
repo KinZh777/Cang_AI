@@ -1,5 +1,6 @@
 package cn.zx.cang.ai.chain.domain.service.impl;
 
+import cn.hutool.core.lang.Assert;
 import cn.zx.cang.ai.api.chain.constant.ChainOperateBizTypeEnum;
 import cn.zx.cang.ai.api.chain.constant.ChainOperateTypeEnum;
 import cn.zx.cang.ai.api.chain.constant.ChainType;
@@ -8,6 +9,7 @@ import cn.zx.cang.ai.api.chain.request.ChainQueryRequest;
 import cn.zx.cang.ai.api.chain.response.ChainProcessResponse;
 import cn.zx.cang.ai.api.chain.response.data.ChainCreateData;
 import cn.zx.cang.ai.api.chain.response.data.ChainResultData;
+import cn.zx.cang.ai.base.exception.BizException;
 import cn.zx.cang.ai.chain.domain.constant.ChainOperateStateEnum;
 import cn.zx.cang.ai.chain.domain.entity.ChainOperateInfo;
 import cn.zx.cang.ai.chain.domain.request.ChainRequest;
@@ -38,7 +40,7 @@ public class MockChainServiceImpl extends AbstractChainService {
         request.setBizType(ChainOperateBizTypeEnum.USER.name());
         request.setChainType(ChainType.MOCK.name());
         ChainProcessResponse chainProcessResponse = doPostExecute(request, ChainOperateTypeEnum.USER_CREATE, chainRequest -> chainRequest.build("", "", System.currentTimeMillis(), null, ""));
-        //如果返回成功，更新成功状态
+        //如果返回成功，更新链操作为成功状态
         if (chainProcessResponse.getSuccess() && chainProcessResponse.getData() != null) {
             ChainOperateInfo chainOperateInfo = chainOperateInfoService.queryByOutBizId(request.getBizId(), request.getBizType(),
                     request.getIdentifier());
